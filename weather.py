@@ -3,34 +3,38 @@ import requests
 import json
 
 # 2. 설정
-# TODO: OpenWeatherMap에서 발급받은 API 키를 입력하세요.
-API_KEY = "4015f0b004fb1563bc0a33aa38bb4b0c"
-CITY_NAME = "Seoul"
+API_KEY = "4015f0b004fb1563bc0a33aa38bb4b0c" # 사용자의 API 키
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
-# 3. API 요청 URL 만들기
-url = f"{BASE_URL}?q={CITY_NAME}&appid={API_KEY}&units=metric&lang=kr"
-
-# 4. 날씨 정보 요청 및 받아오기
-print("날씨 정보를 가져오는 중입니다...")
-response = requests.get(url)
-data = response.json()
-
-# 5. 응답 데이터 확인 및 결과 출력
-if response.status_code == 200:
-    # 성공적으로 데이터를 받아온 경우
-    # 전체 데이터 구조를 보려면 아래 줄의 주석을 해제하세요.
-    # print(json.dumps(data, indent=4, ensure_ascii=False))
+def get_weather(city_name):
+    """지정된 도시의 날씨 정보를 가져와 출력하는 함수"""
+    url = f"{BASE_URL}?q={city_name}&appid={API_KEY}&units=metric&lang=kr"
     
-    # 필요한 정보 추출
-    city_name = data["name"]
-    weather_desc = data["weather"][0]["description"]
-    temp = data["main"]["temp"]
+    print(f"\n'{city_name}'의 날씨 정보를 가져오는 중입니다...")
+    response = requests.get(url)
     
-    # 결과 출력
-    print(f"도시: {city_name}")
-    print(f"날씨: {weather_desc}")
-    print(f"온도: {temp}°C")
-else:
-    # 에러가 발생한 경우
-    print(f"오류가 발생했습니다: {data.get('message', '알 수 없는 오류')}")
+    if response.status_code == 200:
+        data = response.json()
+        # 필요한 정보 추출
+        weather_desc = data["weather"][0]["description"]
+        temp = data["main"]["temp"]
+        
+        # 결과 출력
+        print(f"✅ 날씨: {weather_desc}")
+        print(f"✅ 온도: {temp}°C")
+    else:
+        # 에러가 발생한 경우
+        print(f"❌ 오류가 발생했습니다. 도시 이름을 확인해주세요.")
+
+# 3. 챗봇 메인 루프
+print("안녕하세요! 날씨를 알고 싶은 도시 이름을 입력해주세요.")
+print("프로그램을 종료하려면 '종료'라고 입력하세요.")
+
+while True:
+    city_input = input("\n도시 이름: ")
+    
+    if city_input.lower() == '종료':
+        print("날씨 챗봇을 종료합니다. 이용해주셔서 감사합니다!")
+        break
+        
+    get_weather(city_input)
