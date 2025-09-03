@@ -18,10 +18,15 @@ def get_weather(city_name):
         # 필요한 정보 추출
         weather_desc = data["weather"][0]["description"]
         temp = data["main"]["temp"]
+        feels_like = data["main"]["feels_like"]
+        humidity = data["main"]["humidity"]
+        wind_speed = data["wind"]["speed"]
         
         # 결과 출력
         print(f"✅ 날씨: {weather_desc}")
-        print(f"✅ 온도: {temp}°C")
+        print(f"✅ 온도: {temp}°C (체감온도: {feels_like}°C)")
+        print(f"✅ 습도: {humidity}%")
+        print(f"✅ 풍속: {wind_speed}m/s")
     else:
         # 에러가 발생한 경우
         print(f"❌ 오류가 발생했습니다. 도시 이름을 확인해주세요.")
